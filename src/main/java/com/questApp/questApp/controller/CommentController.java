@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public Comment deleteComment (@PathVariable Long commentId){
-        return commentService.deleteComment(commentId);
+    public void deleteComment (@PathVariable Long commentId){
+         commentService.deleteComment(commentId);
     }
 }
