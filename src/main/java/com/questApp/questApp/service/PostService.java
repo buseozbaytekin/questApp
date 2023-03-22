@@ -1,11 +1,14 @@
 package com.questApp.questApp.service;
 
+import com.questApp.questApp.entity.Like;
 import com.questApp.questApp.entity.Post;
 import com.questApp.questApp.entity.User;
 import com.questApp.questApp.repository.PostRepository;
 import com.questApp.questApp.request.postRequest.PostCreateRequest;
 import com.questApp.questApp.request.postRequest.PostUpdateRequest;
+import com.questApp.questApp.response.LikeResponse;
 import com.questApp.questApp.response.PostResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +19,15 @@ import java.util.stream.Collectors;
 public class PostService {
     private PostRepository postRepository;
     private UserService userService;
+    private LikeService likeService;
 
     public PostService(PostRepository postRepository, UserService userService) {
         this.postRepository = postRepository;
         this.userService = userService;
+    }
+    @Autowired
+    public void setLikeService(LikeService likeService) {
+        this.likeService = likeService;
     }
 
     public List<PostResponse> getPosts(Optional<Long> userId) {
@@ -28,7 +36,9 @@ public class PostService {
             list = postRepository.findByUserId(userId.get());
         }else
             list = postRepository.findAll();
-        return list.stream().map(p -> new PostResponse(p)).collect(Collectors.toList());
+        return list.stream().map(p -> {
+            List<LikeResponse> likes = likeService.getLikes(Optional.ofNullable(null), Optional.of(p.getId()));
+            return new PostResponse(p, likes);}).collect(Collectors.toList());
 
     }
 
