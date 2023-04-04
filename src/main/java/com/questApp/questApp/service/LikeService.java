@@ -44,7 +44,7 @@ public class LikeService {
     public Like createLike(LikeCreateRequest request) {
         User user = userService.getUserById(request.getUserId());
         Post post = postService.getPostById(request.getPostId());
-        if(post != null && user != null){
+        if(user != null && post != null){
             Like like = new Like();
             like.setId(request.getId());
             like.setPost(post);

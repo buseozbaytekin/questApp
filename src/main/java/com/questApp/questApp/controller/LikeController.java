@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/like")
 public class LikeController {
-    LikeService likeService;
+    private LikeService likeService;
 
     public LikeController(LikeService likeService) {
         this.likeService = likeService;

@@ -9,22 +9,23 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.Date;
 
 @Entity
-@Table(name = "posts")
+@Table(name="refresh_token")
 @Data
-public class Post {
+public class RefreshToken {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable=false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private User user;
-    private String title;
 
-    @Lob
-    @Column(columnDefinition = "text")
-    String text;
+    @Column(nullable = false, unique = true)
+    private String token;
 
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date postDate;
+    Date expiryDate;
 }

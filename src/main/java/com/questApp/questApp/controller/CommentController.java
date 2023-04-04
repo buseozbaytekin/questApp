@@ -3,12 +3,13 @@ package com.questApp.questApp.controller;
 import com.questApp.questApp.entity.Comment;
 import com.questApp.questApp.request.commentRequest.CommentCreateRequest;
 import com.questApp.questApp.request.commentRequest.CommentUpdateRequest;
+import com.questApp.questApp.response.CommentResponse;
 import com.questApp.questApp.service.CommentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
@@ -18,7 +19,7 @@ public class CommentController {
         this.commentService = commentService;
     }
     @GetMapping
-    public List<Comment> getComments (@RequestParam Optional<Long> userId, @RequestParam Optional<Long> postId){
+    public List<CommentResponse> getComments (@RequestParam Optional<Long> userId, @RequestParam Optional<Long> postId){
         return commentService.getComments(userId, postId);
     }
 
@@ -32,7 +33,7 @@ public class CommentController {
         return commentService.createComment(request);
     }
 
-    @PostMapping("/{commentId}")
+    @PutMapping("/{commentId}")
     public Comment updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequest request){
         return commentService.updateComment(commentId, request);
     }

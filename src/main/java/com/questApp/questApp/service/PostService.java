@@ -11,6 +11,7 @@ import com.questApp.questApp.response.PostResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,8 +19,9 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private PostRepository postRepository;
-    private UserService userService;
     private LikeService likeService;
+    private UserService userService;
+
 
     public PostService(PostRepository postRepository, UserService userService) {
         this.postRepository = postRepository;
@@ -46,6 +48,12 @@ public class PostService {
         return postRepository.findById(postId).orElse(null);
     }
 
+    public PostResponse getPostByIdWithLikes(Long postId){
+        Post post = postRepository.findById(postId).orElse(null);
+        List<LikeResponse> likes = likeService.getLikes(Optional.ofNullable(null), Optional.of(post.getId()));
+        return new PostResponse(post, likes);
+    }
+
     public Post createPost(PostCreateRequest newPostRequest) {
         User user = userService.getUserById(newPostRequest.getUserId());
         if(user == null)
@@ -55,6 +63,7 @@ public class PostService {
         toSave.setText(newPostRequest.getText());
         toSave.setTitle(newPostRequest.getTitle());
         toSave.setUser(user);
+        toSave.setPostDate(new Date());
         return postRepository.save(toSave);
     }
 

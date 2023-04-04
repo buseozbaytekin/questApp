@@ -6,6 +6,8 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "comments")
 @Data
@@ -26,8 +28,11 @@ public class Comment {
     @JsonIgnore
     private User user;
 
-    @Lob
+    //@Lob
     @Column(columnDefinition = "text")
     String text;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    Date commentDate;
 
 }

@@ -6,10 +6,13 @@ import com.questApp.questApp.entity.User;
 import com.questApp.questApp.repository.CommentRepository;
 import com.questApp.questApp.request.commentRequest.CommentCreateRequest;
 import com.questApp.questApp.request.commentRequest.CommentUpdateRequest;
+import com.questApp.questApp.response.CommentResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -23,17 +26,17 @@ public class CommentService {
         this.postService = postService;
     }
 
-    public List<Comment> getComments(Optional<Long> userId, Optional<Long> postId) {
+    public List<CommentResponse> getComments(Optional<Long> userId, Optional<Long> postId) {
+        List<Comment> comments;
         if(userId.isPresent() && postId.isPresent()){
-            return commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
+            comments = commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
         } else if(userId.isPresent()){
-            return commentRepository.findByUserId(userId.get());
+            comments = commentRepository.findByUserId(userId.get());
         } else if (postId.isPresent()) {
-            return commentRepository.findByPostId(postId.get());
+            comments = commentRepository.findByPostId(postId.get());
         }else
-            return commentRepository.findAll();
-    }
-
+            comments = commentRepository.findAll();
+        return comments.stream().map(CommentResponse::new).collect(Collectors.toList());    }
 
     public Comment getComment(Long commentId) {
         return commentRepository.findById(commentId).orElse(null);
@@ -48,6 +51,7 @@ public class CommentService {
             comment.setPost(post);
             comment.setUser(user);
             comment.setText(request.getText());
+            comment.setCommentDate(new Date());
             return commentRepository.save(comment);
         }else
             return null;

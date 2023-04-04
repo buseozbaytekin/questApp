@@ -52,7 +52,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
+        config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("HEAD");
@@ -80,9 +80,10 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/auth/**")
                 .permitAll()
+                .requestMatchers(HttpMethod.POST,"/post").authenticated()
+                .requestMatchers(HttpMethod.POST,"/comment").authenticated()
                 .anyRequest().authenticated();
 
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        return httpSecurity.build();
+        return httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).build();
     }
 }

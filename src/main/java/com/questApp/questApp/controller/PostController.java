@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/post")
 public class PostController {
@@ -25,8 +25,8 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public Post getPost (@PathVariable Long postId){
-        return postService.getPostById(postId);
+    public PostResponse getPost (@PathVariable Long postId){
+        return postService.getPostByIdWithLikes(postId);
     }
 
     @PostMapping
